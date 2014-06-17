@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+	<head>
+		<title>Directives</title>
+		<script type="text/javascript" src="angular.js"></script>
+		<link rel="stylesheet" type="text/css" href="bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="bootstrap-theme.css" />
+		<script type="text/javascript">
+			angular.module("exampleApp",[])
+				.controller('defaultCtrl', function($scope){
+					$scope.todos = [
+						{action:"Get groceries", complete:false},
+						{action:"Call plumber", complete:false},
+						{action:"Buy running shoes", complete:true},
+						{action:"Buy flowers", complete:false},
+						{action:"Call family", complete:false},
+					];
+					$scope.data = {};
+				})
+		</script>
+		<style type="text/css">
+			.odd{
+				background-color: lightcoral;
+			}
+			.even{
+				background-color: lavenderblush;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+			<h3 class="panel-header">To Do List</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Action</th>
+						<th>Done</th>
+					</tr>
+				</thead>
+				<tr ng-repeat="item in todos">
+					<td>{{$index + 1}}</td>
+					<!-- <td ng-repeat="prop in item">{{prop}}</td> -->
+					<td>{{item.action}}</td>
+					<td>
+						<span ng-hide="item.complete">(Incomplete)</span>
+						<span ng-show="item.complete">(Incomplete)</span>
+					</td>
+				</tr>
+			</table>
+			<!-- <div class="well">
+				<div>The first item is: {{todos[0].action}}</div>
+			</div>
+			<div class="form-group well">
+				<label for="firstItem">Set First Item:</label>
+				<input name="firstItem" class="form-control" ng-model="todos[0].action">
+			</div>
+			<div class="well">
+				<div class="radio" ng-repeat="button in ['None','Table','List']">
+					<label>
+						<input type="radio" ng-model="data.mode"
+							value="{{button}}" ng-checked="$first" />
+							{{button}}
+					</label>
+				</div>
+			</div>
+			<div ng-switch on="data.mode">
+				<div ng-switch-when="Table">
+					<table>
+						<thead>
+							<tr><th>#</th><th>Action</th><th>Done</th>
+						</thead>
+						<tr ng-repeat="item in todos" ng-class="$odd ? 'odd' : 'event'">
+							<td>{{$index + 1}}</td>
+							<td ng-repeat="prop in item">{{prop}}</td>
+						</tr>
+					</table>
+				</div>
+				<div ng-switch-when="List">
+					<ol>
+						<li ng-repeat="item in todos">
+							{{item.action}} <span ng-if="item.complete"> (Done)</span>
+						</li>
+					</ol>
+				</div>
+				<div data-ng-switch-default>
+					Selete another option to display a layout
+				</div>
+			</div> -->
+			<!-- <ng-include src="'table.html'"></ng-include> -->
+			<!-- <table>
+				<tr ng-repeat="item in todos" ng-class="$odd ? 'odd' : 'even'">
+					<td>{{$index+1}}</td>
+					<td ng-repeat="(key, value) in item">
+						{{key}}={{value}}
+					</td>
+					<td>{{item.action}}</td>
+					<td><span ng-if="$first || $last">{{item.complete}}</span></td>
+				</tr>
+				<tbody>
+					<tr ng-repeat-start="item in todos" >
+						<td>This is item {{$item}}</td>
+					</tr>
+					<tr>
+						<td> The action is : {{item.action}}</td>
+					</tr>
+					<tr ng-repeat-end>
+						<td>Item {{$item}} is {{$item.complete? '':'not '}} complete</td>
+					</tr>
+				</tbody>
+			</table> -->
+			<!--<div>There are {{todos.length}} items</div>
+			<div>There are <span ng-bind="todos.length"></span> items</div>
+			<div ng-bind-template="First: {{todos[0].action}}. Secod:{{todos[1].action}}"></div>
+			<div ng-non-bindable>AnuglerJS uses {{ and }} characters for templates-->
+		</div>
+	</body>
+</html>
