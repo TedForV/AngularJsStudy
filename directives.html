@@ -15,8 +15,25 @@
 						{action:"Buy flowers", complete:false},
 						{action:"Call family", complete:false},
 					];
-					$scope.data = {};
+					// $scope.data = {};
+					$scope.buttonNames = ["Red","Green","Blue"];
+					$scope.settings = {
+						Rows:"Red",
+						Columns:"Green"
+					};
+					$scope.handleEvent = function(e){
+						console.log("Event type: " + e.type);
+						$scope.settings.Columns = e.type == "mouseover" ? "Green" : "Blue";
+					}
+					$scope.message = "Come here, mouse."
 				})
+				// .directive("mOver",function(){
+				// 	return function (scope, elem, attrs){
+				// 		elem.on("mouseover",function(){
+				// 			scope.$apply(attrs["mOver"]);
+				// 		});
+				// 	}
+				// });
 		</script>
 		<style type="text/css">
 			.odd{
@@ -25,11 +42,36 @@
 			.even{
 				background-color: lavenderblush;
 			}
+			tr.Red{
+				background-color: lightcoral;
+			}
+			tr.Green{
+				background-color: lightgreen;
+			}
+			tr.Blue{
+				background-color: lightblue;
+			}
 		</style>
 	</head>
 	<body>
 		<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+			<div class="well" mOver="message = 'Mouse has come over.">
+			{{message}}
+			</div>
 			<h3 class="panel-header">To Do List</h3>
+			<div class="row well">
+				<span ng-repeat="button in buttonNames">
+					<button class="btn btn-info" ng-click="settings.Rows = button">{{button}}</button>
+				</span>
+				<!-- <div class="col-xs-6" ng-repeat="(key, value) in settings">
+					<h4>{{key}}</h4>
+					<div class="radio" ng-repeat="button in buttonNames">
+						<label>
+							<input type="radio" ng-model="settings[key]" value="{{button}}" /> {{button}}
+						</label>
+					</div>
+				</div> -->
+			</div>
 			<table class="table">
 				<thead>
 					<tr>
@@ -38,11 +80,13 @@
 						<th>Done</th>
 					</tr>
 				</thead>
-				<tr ng-repeat="item in todos">
+				<tr ng-repeat="item in todos" ng-class="settings.Rows"
+					ng-mouseenter="handleEvent($event)"
+					ng-mouseleave="handleEvent($event)">
 					<td>{{$index + 1}}</td>
 					<!-- <td ng-repeat="prop in item">{{prop}}</td> -->
 					<td>{{item.action}}</td>
-					<td>
+					<td ng-style="{'background-color': settings.Columns}">
 						<span ng-hide="item.complete">(Incomplete)</span>
 						<span ng-show="item.complete">(Incomplete)</span>
 					</td>
