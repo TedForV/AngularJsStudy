@@ -7,25 +7,39 @@
 	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
 	<script type="text/javascript">
 		angular.module("exampleApp",[])
-			.controller('defaultCtrl',  function($scope){
-				$scope	.addUser = function(userDetails){
+		.controller('defaultCtrl',  function($scope){
+			$scope	.addUser = function(userDetails){
+				if(myForm.$valid){
 					$scope.message = userDetails.name + " (" + userDetails.email + ") (" + userDetails.agreed + ")";
+				} else {
+					$scope.showValidation = true;
 				}
+			}
 
-				$scope.message = "Ready";
-				$scope.getError = function(error){
-					if(angular.isDefined(error)){
-						if(error.required){
-							return "Please enter a value.";
-						} else if(error.email){
-							return "Please enter a valid email address.";
-						}
+			$scope.message = "Ready";
+			$scope.getError = function(error){
+				if(angular.isDefined(error)){
+					if(error.required){
+						return "Please enter a value.";
+					} else if(error.email){
+						return "Please enter a valid email address.";
 					}
 				}
-			});
+			}
+
+			$scope.requireValue =true;
+			$scope.matchPattern = new RegExp("^[a-z]");
+
+		});
 	</script>
 	<style type="text/css">
-		form .ng-invalid.ng-dirty{
+		form.validate .ng-invalid-required.ng-dirty{
+			background-color: lightpink;
+		}
+		form.validate .ng-invalid-email.ng-dirty{
+			background-color: lightgoldenrodyellow;
+		}
+		/*form .ng-invalid.ng-dirty{
 			background-color: lightpink;
 		}
 		form .ng-valid.ng-dirty{
@@ -37,7 +51,7 @@
 		}
 		span .summary.ng-valid{
 			color: green;
-		}
+		}*/
 		div.error{
 			color: red;
 			font-weight: bold;
@@ -46,7 +60,22 @@
 </head>
 <body>
 	<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
-		<form name="myForm" novalidate ng-submit="addUser(newUser)">
+		<form name="myForm" novalidate ng-submit="addUser(newUser)" ng-class="showValidation ? 'validate' : ''">
+			<div class="well">
+				<div class="form-group">
+					<label>Text: </label>
+					<input name="sample" class="form-control" ng-model="inputValue" 
+						ng-required="requireValue" ng-minlength="3"
+						ng-maxlength="10" ng-pattern="matchPattern">
+				</div>
+				<div class="well">
+					<p>Required Error: {{myForm.sample.$error.required}}</p>
+					<p>Min Length Error: {{myForm.sample.$error.minlength}}</p>
+					<p>Max Length Error: {{myForm.sample.$error.maxlength}}</p>
+					<p>Pattern Error: {{myForm.sample.$error.pattern}}</p>
+					<p>Element Valid: {{myForm.sample.$valid}}</p>
+				</div>
+			</div>
 			<div class="well">
 				<div class="form-group">
 					<label>Name: </label>
@@ -55,7 +84,8 @@
 				<div class="form-group">
 					<label>Email: </label>
 					<input name="userEmail" type="email" class="form-control" required ng-model="newUser.email">
-					<div class="error" ng-show="myForm.userEmail.$invalid && myForm.userEmail.$dirty">
+					<!-- <div class="error" ng-show="myForm.userEmail.$invalid && myForm.userEmail.$dirty"> -->
+					<div class="error" ng-show="showValidation">
 						<!-- <span ng-show="myForm.userEmail.$error.email">
 							Please enter a valid email address.
 						</span>
