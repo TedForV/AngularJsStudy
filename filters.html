@@ -6,7 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
 	<script type="text/javascript">
 		angular.module("exampleApp",[])
-		.controller('defaultCtrl',  function(){
+		.controller('defaultCtrl',  function($scope){
 			$scope.products = [
 			{name:"Apples",category:"Fruit",price:1.20,expiry:10},
 			{name:"Bananas",category:"Fruit",price:2.42,expiry:7},
