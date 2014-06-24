@@ -2,6 +2,7 @@
 <head>
 	<title>Filters</title>
 	<script type="text/javascript" src="angular.js"></script>
+	<script type="text/javascript" src="angular-locale_fr-fr.js"></script>
 	<link rel="stylesheet" type="text/css" href="bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
 	<script type="text/javascript">
@@ -18,8 +19,12 @@
 
 			{name:"Beer",category:"Drinks",price:2.99,expiry:365},
 			{name:"Wine",category:"Drinks",price:8.99,expiry:365},
-			{name:"Whiskey",category:"Drinks",price:45.99,expiry:365},
+			{name:"Whiskey",category:"Drinks",price:45.99,expiry:365}
 			];	
+			$scope.getExpiryDate = function(days){
+				var now = new Date();
+				return now.setDate(now.getDate() + days);
+			}
 		});
 	</script>
 </head>
@@ -43,10 +48,11 @@
 				</thead>
 				<tbody>
 					<tr ng-repeat="p in products">
-						<td>{{p.name}}</td>	
-						<td>{{p.category}}</td>
-						<td>{{p.expiry}}</td>
-						<td class="text-right">{{p.price}}</td>
+						<td>{{p.name | uppercase}}</td>	
+						<td>{{p.category | lowercase}}</td>
+						<td>{{getExpiryDate(p.expiry) | date:"shortDate"}}</td>
+						<td class="text-right">{{p.price | currency}}</td>
+						<td colspan="4">{{p | json}}</td>
 					</tr>
 				</tbody>
 			</table>
