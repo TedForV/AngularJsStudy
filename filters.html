@@ -3,6 +3,7 @@
 	<title>Filters</title>
 	<script type="text/javascript" src="angular.js"></script>
 	<script type="text/javascript" src="angular-locale_fr-fr.js"></script>
+	
 	<link rel="stylesheet" type="text/css" href="bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
 	<script type="text/javascript">
@@ -30,8 +31,12 @@
 			for(var i = (0-$scope.products.length); i <= $scope.products.length; i++){
 				$scope.limitRange.push(i.toString());
 			}
+			$scope.myCustomSorter = function(item){
+				return item.expiry < 5 ? 9 : item.price;
+			}
 		});
 	</script>
+	<script type="text/javascript" src="customFilters.js"></script>
 </head>
 <body ng-controller="defaultCtrl">
 	<div class="panel panel-default">
@@ -55,12 +60,26 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="p in products | limitTo: limitVal">
+					<!-- <tr ng-repeat="p in products | limitTo: limitVal">
 						<td>{{p.name | uppercase}}</td>	
 						<td>{{p.category | lowercase}}</td>
 						<td>{{getExpiryDate(p.expiry) | date:"shortDate"}}</td>
 						<td class="text-right">{{p.price | currency}}</td>
-						<!-- <td colspan="4">{{p | json}}</td> -->
+						<td colspan="4">{{p | json}}</td>
+					</tr> -->
+					<!-- <tr ng-repeat="p in products | filter:{category:'fish'}">
+						<td>{{p.name | uppercase}}</td>	
+						<td>{{p.category | lowercase}}</td>
+						<td>{{getExpiryDate(p.expiry) | date:"shortDate"}}</td>
+						<td class="text-right">{{p.price | currency}}</td>
+						<td colspan="4">{{p | json}}</td>
+					</tr> -->
+					<tr ng-repeat="p in products | orderBy: [myCustomSorter,'-price']">
+						<td>{{p.name | labelCase}}</td>	
+						<td>{{p.category | labelCase}}</td>
+						<td>{{getExpiryDate(p.expiry) | date:"shortDate"}}</td>
+						<td class="text-right">{{p.price | currency}}</td>
+						<td colspan="4">{{p | json}}</td>
 					</tr>
 				</tbody>
 			</table>
