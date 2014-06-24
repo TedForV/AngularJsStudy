@@ -74,9 +74,9 @@
 						<td class="text-right">{{p.price | currency}}</td>
 						<td colspan="4">{{p | json}}</td>
 					</tr> -->
-					<tr ng-repeat="p in products | orderBy: [myCustomSorter,'-price']">
-						<td>{{p.name | labelCase}}</td>	
-						<td>{{p.category | labelCase}}</td>
+					<tr ng-repeat="p in products | orderBy:'price'">
+						<td>{{p.name | lableCase}}</td>	
+						<td>{{p.category | lableCase:true}}</td>
 						<td>{{getExpiryDate(p.expiry) | date:"shortDate"}}</td>
 						<td class="text-right">{{p.price | currency}}</td>
 						<td colspan="4">{{p | json}}</td>
