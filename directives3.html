@@ -38,7 +38,11 @@
 				// 	return angular.element(
 				// 		document.querySelector("#listTemplate")).html();
 				// 		}
-				templateUrl:"Template.html"
+				//templateUrl:"Template.html"
+				templateUrl: function(elem,attrs){
+					return attrs["template"] == "table" ?
+						"tableTemplate.html" : "itemTemplate.html";
+				}
 				
 			}
 
@@ -71,7 +75,7 @@
 		<h3>Products</h3>
 	</div>
 	<div class="panel-body">
-		<div unordered-list="products" list-property="price | currency"></div>
+		<div unordered-list="products" list-property="price | currency" template="table"></div>
 		<!-- <unordered-list list-source="products" list-property="price | currency" /> -->
 	</div>
 </body>
