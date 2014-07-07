@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<script type="text/javascript" src="angular.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
+	<script type="text/javascript">
+	angular.module("exampleApp", [])
+		.directive("scopeDemo", function(){
+			return {
+				template: "<div class='panel-body'> Name: <input ng-model='name'/></div>",
+				scope:true
+			}
+		})
+		.controller("scopeCtrl",function($scope){
+			// do nothing -no behaviours required
+			//$scope.name= "test";
+		});
+	</script>
+</head>
+<body>
+	<div ng-controller="scopeCtrl" class="panel panel-default">
+		<div class="panel-body" scope-demo></div>
+		<div class="panel-body" scope-demo></div>
+	</div>
+</body>
+</html>
