@@ -3,6 +3,11 @@
 	<script type="text/javascript" src="angular.js"></script>
 	<link rel="stylesheet" type="text/css" href="bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
+	<!--<script type="text/javascript" id="listTemplate">-->
+		<!--// <ul>
+		// 	<li ng-repeat="item in data">{{item.price | currency}}</li>
+		// </ul>-->
+	<!--</script>-->
 	<script type="text/javascript">
 		angular.module("exampleApp",[])
 		.directive("unorderedList",function(){
@@ -28,7 +33,13 @@
 					
 				},
 				restrict:"EA",
-				template: "<ul><li ng-repeat='item in data'>{{item.price | currency}}</li></ul>"
+				// template: "<ul><li ng-repeat='item in data'>{{item.price | currency}}</li></ul>"
+				// template: function(){
+				// 	return angular.element(
+				// 		document.querySelector("#listTemplate")).html();
+				// 		}
+				templateUrl:"Template.html"
+				
 			}
 
 			// return function(scope,element,attrs){
