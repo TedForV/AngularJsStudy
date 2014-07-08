@@ -20,7 +20,7 @@
 				scope.dataSource = "directive";
 			},
 			restrict:"E",
-			scope:true,
+			scope:false,//true,
 			template:function(){
 				return angular.element(
 					document.querySelector("#template")).html();
@@ -29,7 +29,7 @@
 		}
 	})
 	.controller('defaultCtrl',function($scope){
-		$scope.dataSource="controller":
+		$scope.dataSource="controller";
 	})
 	</script>
 </head>
