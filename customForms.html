@@ -25,6 +25,13 @@
 			require:"ngModel",
 			template:document.querySelector("#triTemplate").outerText,
 			link:function(scope,element,attrs,ctrl){
+				element.on("click",function(event){
+					setSelected(event.target.innerText);
+					scope.$apply(function(){
+						ctrl.$setViewValue(event.target.innerText);
+					});
+				});
+
 				var setSelected = function(value){
 					var buttons = element.find("button");
 					buttons.removeClass("btn-primary");
@@ -34,7 +41,10 @@
 						}
 					}
 				}
-				setSelected(scope.dataValue);
+				// setSelected(scope.dataValue);
+				ctrl.$render = function(){
+					setSelected(ctrl.$viewValue || "Not Sure");
+				}
 			}
 		}
 	});
