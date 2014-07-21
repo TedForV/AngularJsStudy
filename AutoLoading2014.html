@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html ng-app="AutoLoading">
+<head>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="ng-grid.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
+	<style type="text/css">
+		.gridstyle {
+		    border: 1px solid rgb(212,212,212);
+		    width: 900px; 
+		    height: 300px
+		}
+		.green{
+			background-color: green;
+			color:white;
+		}
+		.lightGreen{
+			background-color: lightgreen;
+			color: white;
+		}
+		.red{
+			background-color: red;
+			color: white;
+		}
+		.gray{
+			color: gray;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="well" data-ng-controller="SendingCtrl">
+		<div class="gridstyle" ng-grid="sendingQueue" ng-style="{'height':tableHeight}"></div>
+	</div>
+</body>
+<script type="text/javascript" src="angular.js"></script>
+<script type="text/javascript" src="jquery-1.9.1.js"></script>
+<script type="text/javascript" src="ng-grid.js"></script>
+<script type="text/javascript">
+	angular.module("AutoLoading",["ngGrid"])
+	.filter("toBoolean",function(){
+		return function (value){
+			if(angular.isNumber(value)){
+				if(value == 1){
+					return "true";
+				}else if(value == 0){
+					return "false";
+				}else if(value == -1){
+					return "Sending...";
+				}
+			}else{
+				return "Undefined";
+			}
+		}
+	})
+	.filter("sendingStatus",function(){
+		return function(value){
+			if(angular.isNumber(value)){
+				if(value == 1){
+					return "Sended";
+				}else if(value == 0){
+					return "Waiting";
+				}else if(value == -1){
+					return "Sending...";
+				}
+			}else{
+				return "Undefined";
+			}
+		}
+	})
+	.controller("SendingCtrl",function($scope){
+
+		$scope.vpcData = [
+			{VPCId:1,DepartureTime:"2014-05-04",Vessel:"MSC V1",Voyage:"FD546",POL:"CHIWAN",WithELV:1,IsFinalized:1,IsSended:1,Order:1},
+			{VPCId:2,DepartureTime:"2014-05-05",Vessel:"MSC V2",Voyage:"FD546",POL:"YANTIAN",WithELV:1,IsFinalized:1,IsSended:1,Order:10},
+			{VPCId:3,DepartureTime:"2014-05-06",Vessel:"MSC V3",Voyage:"FD546",POL:"CHIWAN",WithELV:1,IsFinalized:1,IsSended:1,Order:5},
+			{VPCId:4,DepartureTime:"2014-05-07",Vessel:"MSC V4",Voyage:"FD546",POL:"YANTIAN",WithELV:1,IsFinalized:1,IsSended:1,Order:1},
+			{VPCId:5,DepartureTime:"2014-05-08",Vessel:"MSC V5",Voyage:"FD546",POL:"YANTIAN",WithELV:1,IsFinalized:1,IsSended:-1,Order:1},
+			{VPCId:6,DepartureTime:"2014-05-08",Vessel:"MSC V6",Voyage:"FD546",POL:"CHIWAN",WithELV:1,IsFinalized:1,IsSended:0,Order:2},
+			{VPCId:7,DepartureTime:"2014-05-09",Vessel:"MSC V7",Voyage:"FD546",POL:"YANTIAN",WithELV:1,IsFinalized:0,IsSended:0,Order:3},
+			{VPCId:8,DepartureTime:"2014-05-09",Vessel:"MSC V8",Voyage:"FD546",POL:"CHIWAN",WithELV:1,IsFinalized:0,IsSended:0,Order:4},
+			{VPCId:9,DepartureTime:"2014-05-09",Vessel:"MSC V9",Voyage:"FD546",POL:"CHIWAN",WithELV:1,IsFinalized:0,IsSended:0,Order:5},
+			{VPCId:10,DepartureTime:"2014-05-10",Vessel:"MSC V0",Voyage:"FD546",POL:"YANTIAN",WithELV:1,IsFinalized:0,IsSended:0,Order:6},
+			{VPCId:11,DepartureTime:"2014-05-11",Vessel:"MSC V10",Voyage:"FD546",POL:"CHIWAN",WithELV:1,IsFinalized:0,IsSended:0,Order:6}
+		];
+
+		$scope.tableHeight = $scope.vpcData.length * 30 + 100 + 'px';
+
+		$scope.checkStatus =  'red';
+
+		$scope.sendingQueue = {
+			data:'vpcData',
+			enableColumnResize: true,
+			columnDefs:[
+			 	{field:'Vessel'},
+			 	{field:'Voyage'},
+			 	{field:'POL'},
+			 	{field:'DepartureTime'},
+			 	{field:'WithELV', displayName:'With ELV',cellFilter:'toBoolean'},
+			 	{field:'IsFinalized', displayName:'Is Finalized',cellFilter:'toBoolean'},
+			 	{field:'IsSended',displayName:'Send Status',cellFilter:'sendingStatus'},
+			 	{field:'Order'},
+			],
+			multiSelect:false,
+			sortInfo:{fields:['IsSended','Order'],directions:['asc']},
+			rowTemplate:'<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" ng-class="{green:row.getProperty(\'IsSended\') == 0}" class="ngCell {{col.cellClass}}"><div class="ngVerticalBar" ng-style="{height: rowHeight}" ng-class="{ ngVerticalBarVisible: !$last }">&nbsp;</div><div ng-cell></div></div>'
+
+		};
+
+
+	})
+
+</script>
+</html>
