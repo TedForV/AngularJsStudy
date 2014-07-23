@@ -775,6 +775,14 @@ var ngColumn = function (config, $scope, grid, domUtilityService, $templateCache
         config.sortCallback(self, evt);
         return false;
     };
+    self.sortByDirection=function(evt,direction){
+        if (!self.sortable) {
+            return true; 
+        }
+        self.sortDirection = direction;
+        config.sortCallback(self, evt);
+        return false;
+    }
     self.gripClick = function() {
         clicks++; 
         if (clicks === 1) {
@@ -3004,6 +3012,14 @@ ngGridDirectives.directive('ngGrid', ['$compile', '$filter', '$templateCache', '
                                 col.sort();
                             }
                         };
+                        options.sortByDirection = function(field,direction){
+                            var col = $scope.columns.filter(function (c) {
+                                return c.field === field;
+                            })[0];
+                            if (col) {
+                                col.sortByDirection(direction.toUpperCase());
+                            }
+                        }
                         options.gridId = grid.gridId;
                         options.ngGrid = grid;
                         options.$gridScope = $scope;
