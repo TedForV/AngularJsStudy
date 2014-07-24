@@ -8,7 +8,7 @@
 	<style type="text/css">
 		.gridstyle {
 			border: 1px solid rgb(212,212,212);
-			width: 100%; 
+			width: 500; 
 			height: 300px
 		}
 		.green{
@@ -28,8 +28,8 @@
 		}
 	</style>
 </head>
-<body ng-controller="SendingCtrl">
-	<div class="col-md-2" style="position:fixed;left:0px;top:0px;">
+<body data-ng-controller="bodyCtrl">
+	<div class="col-md-2" style="position:fixed;left:0px;top:0px;" ng-controller="switchCtrl">
 		<toggle-switch model="pageStatus" 
 		on-label="Sending"
 		off-label="Search"
@@ -37,7 +37,7 @@
 	</div>
 	<div class="well col-md-8 col-md-offset-2"  >
 		
-		<div id="SendingQueueDiv">
+		<div id="SendingQueueDiv" ng-controller="SendingCtrl">
 			<div class="well">
 				<button class="btn btn-primary" ng-click="enableChangeOrder()" id="enableChangeOrderBtn">Change Order</button>
 				<div id="editBtnDiv" style="display:none">
@@ -55,39 +55,39 @@
 				<div class="gridstyle" ng-grid="editOrderQueue" ng-style="{'height':eidtTableHeight}"></div>
 			</div>
 		</div>
-
-		<div class="form-horizontal well" id="SearchDiv">
-			<div class="form-group">
-				<label for="inputVessel" class="col-sm-1 control-label">Vessel: </label>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" id="inputVessel" placeholder="Input the vessel" ng-model="searchCondition.vessel">
+		
+		<div  id="SearchDiv" style="display:none" ng-controller="SearchCtrl">
+			<div class="form-horizontal well">
+				<div class="form-group">
+					<label for="inputVessel" class="col-sm-1 control-label">Vessel: </label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" id="inputVessel" placeholder="Input the vessel" ng-model="searchCondition.vessel">
+					</div>
+					<label for="inputVoyage" class="col-sm-2 control-label">Voyage: </label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" id="inputVoyage" placeholder="Input the voyage" ng-model="searchCondition.voyage">
+					</div>
 				</div>
-				<label for="inputVoyage" class="col-sm-2 control-label">Voyage: </label>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" id="inputVoyage" placeholder="Input the voyage" ng-model="searchCondition.voyage">
+				<div class="form-group">
+					<label for="inputPol" class="col-sm-1 control-label">POL: </label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" id="inputPol" placeholder="Input the POL" ng-model="searchCondition.pol">
+					</div>
+					<label for="inputCompanyName" class="col-sm-2 control-label">CompanyName: </label>
+					<div class="col-sm-4">
+						<input type="text" class="form-control" id="inputCompanyName" placeholder="Input the company name" ng-model="searchCondition.company">
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<label for="inputPol" class="col-sm-1 control-label">POL: </label>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" id="inputPol" placeholder="Input the POL" ng-model="searchCondition.pol">
+				<div class="form-group">
+					<div class="col-sm-3 col-sm-offset-7">
+						<button ng-click="showCurrentStatus()" class="btn btn-primary">Show current sending queue</button>
+					</div>
+					<div class="col-sm-1">
+						<button ng-click="Search" class="btn btn-primary">Search</button>	
+					</div>
 				</div>
-				<label for="inputCompanyName" class="col-sm-2 control-label">CompanyName: </label>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" id="inputCompanyName" placeholder="Input the company name" ng-model="searchCondition.company">
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-3 col-sm-offset-7">
-					<button ng-click="showCurrentStatus()" class="btn btn-primary">Show current sending queue</button>
-				</div>
-				<div class="col-sm-1">
-					<button ng-click="Search" class="btn btn-primary">Search</button>	
-				</div>
-				
 			</div>
 		</div>
-		
 	</div>
 </body>
 <script type="text/javascript" src="angular.js"></script>
@@ -133,6 +133,25 @@
 			}
 		}
 	})
+	.controller("bodyCtrl",function($scope){
+
+	})
+	.controller("switchCtrl",function($scope){
+		$scope.pageStatus = true;
+
+		//the switch button to switch the page status
+		$scope.$watch("pageStatus",function(newValue,oldValue){
+			if(newValue==true){
+				$("#SearchDiv").fadeOut('slow',function(){
+					$("#SendingQueueDiv").fadeIn('slow');
+				})
+			}else{
+				$("#SendingQueueDiv").fadeOut('slow',function(){
+					$("#SearchDiv").fadeIn('slow');
+				})
+			}
+		})
+	})
 	.controller("SendingCtrl",function($scope){
 
 		$scope.vpcData = [
@@ -151,7 +170,7 @@
 
 		$scope.changeOrderData=[];
 
-		$scope.pageStatus = true;
+		
 
 		$scope.searchCondition = {
 			vessel: "",
@@ -184,6 +203,10 @@
 		}
 
 		$scope.saveOrder = function(){
+			if(!CheckOrder()){
+				alert("The duplicate issue happened on order. Please check again, thanks.")
+				return;
+			}
 			alert("ajax to sync the data.")
 			SaveOrderData();
 			$scope.cancelOrder();
@@ -192,18 +215,7 @@
 
 		
 
-		//the switch button to switch the page status
-		$scope.$watch("pageStatus",function(newValue,oldValue){
-			if(newValue==true){
-				$("#SearchDiv").fadeOut('slow',function(){
-					$("#SendingQueueDiv").fadeIn('slow');
-				})
-			}else{
-				$("#SendingQueueDiv").fadeOut('slow',function(){
-					$("#SearchDiv").fadeIn('slow');
-				})
-			}
-		})
+		
 
 		$scope.$watch('vpcTableHeight.length',function(){
 			$scope.vpcTableHeight = $scope.vpcData.length * 30 + 100 + 'px';
@@ -211,13 +223,6 @@
 		$scope.$watch('changeOrderData.length',function(){
 			$scope.eidtTableHeight = $scope.changeOrderData.length * 30 + 100 + 'px';
 		})
-		
-
-		// $scope.checkStatus =  'red';
-
-		// $scope.style = {
-		// 	backgroundColor:"red"
-		// }
 
 		$scope.getBackgroundColor = function(sendingStatus,withELV,isFinalized){
 			if(angular.isNumber(sendingStatus)){
@@ -307,6 +312,38 @@
 			})
 			})
 		}
+
+		function CheckOrder(){
+			var tempData = [];
+			var isValidate = true;
+			$.each($scope.changeOrderData,function(i,v){
+				if($.inArray(v.Order,tempData) == -1){
+					tempData.push(v.Order);
+				}else{
+					isValidate = false;
+					return false;
+				}
+			})
+			return isValidate;
+		}
 	})
+	.controller("SearchCtrl",function($scope){
+		var searchData = [
+			{VPCId:1,DepartureTime:'2014-07-24',VesselName:'MSC V1',VoyageNumber:'Search1',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:2,DepartureTime:'2014-07-24',VesselName:'MSC V2',VoyageNumber:'Search2',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:3,DepartureTime:'2014-07-24',VesselName:'MSC V3',VoyageNumber:'Search3',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:4,DepartureTime:'2014-07-24',VesselName:'MSC V4',VoyageNumber:'Search4',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:5,DepartureTime:'2014-07-24',VesselName:'MSC V5',VoyageNumber:'Search5',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:6,DepartureTime:'2014-07-24',VesselName:'MSC V6',VoyageNumber:'Search6',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:7,DepartureTime:'2014-07-24',VesselName:'MSC V7',VoyageNumber:'Search7',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:8,DepartureTime:'2014-07-24',VesselName:'MSC V8',VoyageNumber:'Search8',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:9,DepartureTime:'2014-07-24',VesselName:'MSC V9',VoyageNumber:'Search9',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:10,DepartureTime:'2014-07-24',VesselName:'MSC V10',VoyageNumber:'Search10',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1},
+			{VPCId:11,DepartureTime:'2014-07-24',VesselName:'MSC V11',VoyageNumber:'Search11',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1}
+		];
+
+		
+
+	});
 </script>
 </html>
