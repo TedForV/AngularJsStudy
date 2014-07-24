@@ -79,14 +79,17 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-sm-3 col-sm-offset-7">
-						<button ng-click="showCurrentStatus()" class="btn btn-primary">Show current sending queue</button>
+					<div class="col-sm-1 col-sm-offset-10">
+						<button ng-click="Search()" class="btn btn-primary">Search</button>	
 					</div>
-					<div class="col-sm-1">
-						<button ng-click="Search" class="btn btn-primary">Search</button>	
+				</div>
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%">
+						<span >searching...</span>
 					</div>
 				</div>
 			</div>
+			
 		</div>
 	</div>
 </body>
@@ -94,45 +97,9 @@
 <script type="text/javascript" src="jquery-1.9.1.js"></script>
 <script type="text/javascript" src="ng-grid.js"></script>
 <script type="text/javascript" src="angular-toggle-switch.js"></script>
+<script type="text/javascript" src="AL_Filters.js"></script>
 <script type="text/javascript">
-	angular.module("AutoLoading",["ngGrid","toggle-switch"])
-	.filter("toBoolean",function(){
-		return function (value){
-			if(angular.isNumber(value)){
-				if(value == 1){
-					return "true";
-				}else if(value == 0){
-					return "false";
-				}
-			}else{
-				return "Undefined";
-			}
-		}
-	})
-	.filter("sendingStatus",function(){
-		return function(value){
-			if(angular.isNumber(value)){
-				if(value == 1){
-					return "Sended";
-				}else if(value == 0){
-					return "Waiting...";
-				}else if(value == -1){
-					return "Sending...";
-				}
-			}else{
-				return "Undefined";
-			}
-		}
-	})
-	.filter("companyFilter",function(){
-		return function(value){
-			if(value && angular.isString(value)){
-				return value;
-			}else{
-				return "All Company";
-			}
-		}
-	})
+	angular.module("AutoLoading",["ngGrid","toggle-switch","autoLoading.Filter"])
 	.controller("bodyCtrl",function($scope){
 
 	})
@@ -170,15 +137,6 @@
 
 		$scope.changeOrderData=[];
 
-		
-
-		$scope.searchCondition = {
-			vessel: "",
-			voyage:"",
-			pol:"",
-			company:""
-		}
-
 		$scope.enableChangeOrder = function(){
 			$scope.changeOrderData = getEditableOriginalOrder();
 			$("#enableChangeOrderBtn").hide();
@@ -187,8 +145,6 @@
 				$("#editTableDiv").fadeIn('slow');
 			});
 		}
-
-		
 
 		$scope.undoOrder = function(){
 			$scope.changeOrderData = getEditableOriginalOrder();
@@ -212,10 +168,6 @@
 			$scope.cancelOrder();
 			$scope.sendingQueue.sortByDirection("Order","ASC");
 		}
-
-		
-
-		
 
 		$scope.$watch('vpcTableHeight.length',function(){
 			$scope.vpcTableHeight = $scope.vpcData.length * 30 + 100 + 'px';
@@ -342,7 +294,21 @@
 			{VPCId:11,DepartureTime:'2014-07-24',VesselName:'MSC V11',VoyageNumber:'Search11',PortId:1,LoadPort:'CHIWAN',WithELV:1,IsFinalized:1,IsSend:1}
 		];
 
+		$scope.searchCondition = {
+			vessel: "",
+			voyage:"",
+			pol:"",
+			company:""
+		}
 		
+		$scope.Search = function(){
+			var searchObj = $scope.searchCondition;
+			if(searchObj.vessel && searchObj.voyage && searchObj.pol){
+
+			}else{
+				alert("You must input vessel,voyage and pol at leaset for searching.");
+			}
+		}
 
 	});
 </script>
