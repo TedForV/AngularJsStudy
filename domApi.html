@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>DOM API Service</title>
+	<script type="text/javascript" src="angular.js"></script>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
+	<script type="text/javascript">
+		angular.module("exampleApp",[])
+		.config(function($anchorScrollProvider){
+			$anchorScrollProvider.disableAutoScrolling();
+		})
+		// .controller("defaultCtrl",function($scope,$window,$document){
+		// 	// $scope.displayAlert = function(msg){
+		// 	// 	 $window.alert(msg);
+		// 	// }
+		// 	$document.find("button").on("click",function(event){
+		// 		$window.alert(event.target.innerText);
+		// 	})
+		// });
+		// .controller("defaultCtrl",function($scope,$interval){
+		// 	$interval(function(){
+		// 		$scope.time = new Date().toTimeString();
+		// 	},2000);
+		// });
+		.controller("defaultCtrl",function($scope,$location,$anchorScroll){
+			$scope.itemCount = 50;
+			$scope.items = [];
+			throw new Error("Triggered Exception");
+			for (var i = 0; i < $scope.itemCount; i++) {
+				$scope.items[i] = "Item " + i;
+			};
+
+			$scope.show = function(id){
+				$location.hash(id);
+				if(id == "bottom"){
+					$anchorScroll()
+				}
+			}
+		})
+	</script>
+</head>
+<body ng-controller="defaultCtrl" class="well">
+	<!-- <button class="btn btn-primary" ng-click="displayAlert()">Click Me</button> -->
+	<!-- <div class="panel panel-default">
+		<h4 class="panel-heading">Time</h4>
+		<div class="panel-body">
+			The time is: {{time}}
+		</div>
+	</div> -->
+	<div class="panel panel-default">
+		<h4 class="panel-heading">URL</h4>
+		<div class="panel-body">
+			<p id="top">This is the top</p>
+			<button class="btn btn-primary" ng-click="show('bottom')">Go to Bottom</button>
+			<p>
+			<ul>
+				<li ng-repeat="item in items">{{item}}</li>
+			</ul>
+			<p id="bottom">This is the bottom</p>
+			<button class="btn btn-primary" ng-click="show('top')">Go to Top</button>
+		</div>
+		
+
+	</div>
+</body>
+
+</body>
+</html>
